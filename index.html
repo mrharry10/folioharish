@@ -4,15 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Harish Manni — Creative Developer</title>
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&display=swap" rel="stylesheet">
 
-  <!-- Stylesheet -->
   <style>
 /* ============================================
-   HARISH MANNI — PORTFOLIO STYLESHEET
-   style.css
+   HARISH MANNI — PORTFOLIO STYLESHEET (FIXED)
    ============================================ */
 
 /* ---------- CSS VARIABLES ---------- */
@@ -54,28 +50,34 @@ body::before {
   opacity: 0.4;
 }
 
-/* ---------- CUSTOM CURSOR ---------- */
-.cursor {
-  position: fixed;
-  width: 12px; height: 12px;
-  background: var(--accent);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transition: transform 0.1s ease;
-  mix-blend-mode: difference;
+/* ---------- CUSTOM CURSOR (desktop only) ---------- */
+.cursor, .cursor-ring { display: none; }
+
+@media (hover: hover) and (pointer: fine) {
+  body { cursor: none; }
+  .cursor {
+    display: block;
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    display: block;
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.18s ease;
+    opacity: 0.5;
+  }
 }
-.cursor-ring {
-  position: fixed;
-  width: 36px; height: 36px;
-  border: 1px solid var(--accent);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  transition: all 0.18s ease;
-  opacity: 0.5;
-}
-body:hover .cursor { opacity: 1; }
 
 /* ---------- NAVIGATION ---------- */
 nav {
@@ -134,6 +136,50 @@ nav {
 }
 .nav-cta:hover { background: var(--text); transform: translateY(-2px); }
 
+/* Mobile hamburger */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  background: none;
+  border: none;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px; height: 2px;
+  background: var(--text);
+  transition: all 0.3s;
+}
+
+/* Mobile nav menu */
+.nav-mobile-menu {
+  display: none;
+  position: fixed;
+  top: 61px; left: 0; right: 0;
+  background: rgba(8,8,8,0.97);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 24px;
+  flex-direction: column;
+  gap: 0;
+  z-index: 99;
+}
+.nav-mobile-menu.open { display: flex; }
+.nav-mobile-menu a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  transition: color 0.2s;
+}
+.nav-mobile-menu a:last-child { border-bottom: none; }
+.nav-mobile-menu a:hover { color: var(--accent); }
+
 /* ---------- HERO ---------- */
 .hero {
   min-height: 100vh;
@@ -166,12 +212,14 @@ nav {
   margin-bottom: 32px;
   opacity: 0;
   animation: fadeUp 0.6s ease 0.1s forwards;
+  width: fit-content;
 }
 .status-dot {
   width: 6px; height: 6px;
   border-radius: 50%;
   background: var(--accent);
   animation: blink 1.5s ease infinite;
+  flex-shrink: 0;
 }
 .hero-tag {
   display: inline-flex; align-items: center; gap: 8px;
@@ -187,10 +235,11 @@ nav {
   content: '';
   width: 24px; height: 1px;
   background: var(--accent);
+  flex-shrink: 0;
 }
 .hero-name {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(56px, 7vw, 96px);
+  font-size: clamp(52px, 7vw, 96px);
   font-weight: 800;
   line-height: 0.92;
   letter-spacing: -3px;
@@ -215,7 +264,7 @@ nav {
   animation: fadeUp 0.7s ease 0.5s forwards;
 }
 .hero-actions {
-  display: flex; gap: 16px; align-items: center;
+  display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
   opacity: 0;
   animation: fadeUp 0.7s ease 0.65s forwards;
 }
@@ -234,6 +283,7 @@ nav {
   transition: all 0.25s;
   position: relative;
   overflow: hidden;
+  white-space: nowrap;
 }
 .btn-primary::before {
   content: '';
@@ -255,6 +305,7 @@ nav {
   text-decoration: none;
   display: inline-block;
   transition: all 0.25s;
+  white-space: nowrap;
 }
 .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); }
 
@@ -295,6 +346,8 @@ nav {
   position: relative;
   z-index: 2;
   box-shadow: 0 0 80px rgba(212,245,72,0.4);
+  object-fit: cover;
+  object-position: center top;
 }
 .hero-card::before {
   content: '';
@@ -491,8 +544,7 @@ section {
 }
 .skill-card::before {
   content: '';
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   background: linear-gradient(135deg, var(--glow) 0%, transparent 60%);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -551,6 +603,7 @@ section {
   grid-template-columns: 1fr 1fr;
   gap: 2px;
   margin-bottom: 2px;
+  align-items: start;
 }
 .project-card {
   background: var(--card);
@@ -579,10 +632,15 @@ section {
 .project-card:hover::after { transform: scaleX(1); }
 .project-card-featured {
   grid-column: span 2;
-  min-height: 280px;
+  min-height: 320px;
   flex-direction: row;
   align-items: center;
   gap: 60px;
+}
+.project-card-featured > div:first-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 .project-num {
   font-family: 'Syne', sans-serif;
@@ -601,7 +659,7 @@ section {
   margin-bottom: 12px;
   line-height: 1.1;
 }
-.project-card-featured .project-title { font-size: 40px; }
+.project-card-featured .project-title { font-size: 36px; }
 .project-desc {
   color: var(--muted);
   font-size: 13px;
@@ -615,7 +673,7 @@ section {
   justify-content: space-between;
   margin-top: auto;
 }
-.project-tech { display: flex; gap: 8px; }
+.project-tech { display: flex; gap: 8px; flex-wrap: wrap; }
 .tech-badge {
   font-size: 10px;
   letter-spacing: 1px;
@@ -631,6 +689,7 @@ section {
   display: flex; align-items: center; justify-content: center;
   font-size: 18px;
   transition: all 0.25s;
+  flex-shrink: 0;
 }
 .project-card:hover .project-arrow {
   background: var(--accent);
@@ -640,7 +699,7 @@ section {
 }
 .project-mockup {
   flex-shrink: 0;
-  width: 300px; height: 200px;
+  width: 260px; height: 200px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 4px;
@@ -721,15 +780,16 @@ section {
 }
 .contact-email {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(28px, 4vw, 56px);
+  font-size: clamp(18px, 3.5vw, 56px);
   font-weight: 800;
-  letter-spacing: -2px;
+  letter-spacing: -1px;
   color: var(--text);
   text-decoration: none;
   display: inline-block;
   margin: 32px 0;
   position: relative;
   transition: color 0.3s;
+  word-break: break-all;
 }
 .contact-email::after {
   content: '';
@@ -741,7 +801,7 @@ section {
 }
 .contact-email:hover { color: var(--accent); }
 .contact-email:hover::after { width: 100%; }
-.socials { display: flex; justify-content: center; gap: 16px; margin-top: 48px; }
+.socials { display: flex; justify-content: center; gap: 16px; margin-top: 48px; flex-wrap: wrap; }
 .social-link {
   width: 48px; height: 48px;
   border: 1px solid var(--border);
@@ -767,6 +827,8 @@ footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 footer p { color: var(--muted); font-size: 12px; letter-spacing: 0.5px; }
 footer span { color: var(--accent); }
@@ -816,33 +878,206 @@ footer span { color: var(--accent); }
   to   { transform: translateX(-50%); }
 }
 
-/* ---------- RESPONSIVE / MOBILE ---------- */
-@media (max-width: 900px) {
-  nav { padding: 16px 24px; }
+/* ============================================
+   MOBILE — max-width: 768px
+   ============================================ */
+@media (max-width: 768px) {
+
+  /* Nav */
+  nav {
+    padding: 16px 20px;
+  }
   .nav-links { display: none; }
-  .hero { grid-template-columns: 1fr; padding: 20px 24px; padding-top: 90px; }
+  .nav-cta { display: none; }
+  .nav-hamburger { display: flex; }
+
+  /* Hero */
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 20px 20px;
+    padding-top: 80px;
+    min-height: auto;
+    padding-bottom: 60px;
+  }
   .hero-right { display: none; }
-  .hero-left { padding-right: 0; }
-  section { padding: 60px 24px; }
-  .stats-strip { grid-template-columns: repeat(2, 1fr); padding: 20px 24px; }
-  .stat-item { padding: 16px; }
-  .skills-grid,
-  .projects-grid,
-  .about-grid { grid-template-columns: 1fr; }
-  .project-card-featured { flex-direction: column; }
-  .project-mockup { width: 100%; }
-  footer { flex-direction: column; gap: 12px; text-align: center; padding: 20px 24px; }
+  .hero-left {
+    padding-right: 0;
+    padding-top: 20px;
+  }
+  .hero-name {
+    font-size: clamp(52px, 14vw, 72px);
+    letter-spacing: -2px;
+  }
+  .hero-desc {
+    font-size: 16px;
+    max-width: 100%;
+  }
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .btn-primary, .btn-outline {
+    text-align: center;
+    padding: 16px 24px;
+  }
+  .status-badge {
+    font-size: 10px;
+    padding: 5px 12px;
+  }
+  .scroll-ind { display: none; }
+  .hero-accent-line { display: none; }
+
+  /* Stats strip */
+  .stats-strip {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0;
+    gap: 0;
+  }
+  .stat-item {
+    padding: 24px 20px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-item:nth-child(2n) { border-right: none; }
+  .stat-item:nth-child(3),
+  .stat-item:nth-child(4) { border-bottom: none; }
+  .stat-num { font-size: 32px; }
+
+  /* Sections */
+  section {
+    padding: 60px 20px;
+  }
+  .section-title {
+    font-size: clamp(32px, 9vw, 48px);
+    letter-spacing: -1px;
+    margin-bottom: 36px;
+  }
+
+  /* Skills */
+  .skills-grid {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .skill-card {
+    padding: 28px 24px;
+  }
+  .skill-num { font-size: 60px; }
+  .skill-name { font-size: 20px; }
+
+  /* Projects */
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .project-card {
+    padding: 28px 24px;
+    min-height: auto;
+  }
+  .project-card-featured {
+    grid-column: span 1;
+    flex-direction: column;
+    gap: 24px;
+    align-items: flex-start;
+  }
+  .project-card-featured .project-title { font-size: 26px; }
+  .project-mockup {
+    width: 100%;
+    height: 140px;
+  }
+  .project-footer {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* About */
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .about-text { font-size: 17px; }
+  .edu-card {
+    padding: 20px;
+  }
+  .edu-card:hover { transform: none; }
+
+  /* Contact */
+  .contact-section {
+    padding: 60px 20px;
+  }
+  .contact-email {
+    font-size: clamp(16px, 5vw, 28px);
+    letter-spacing: -0.5px;
+    word-break: break-word;
+  }
+  .socials {
+    gap: 10px;
+    margin-top: 32px;
+  }
+  .social-link {
+    width: 44px; height: 44px;
+    font-size: 11px;
+  }
+
+  /* Footer */
+  footer {
+    padding: 24px 20px;
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+}
+
+/* ============================================
+   TABLET — 769px to 1024px
+   ============================================ */
+@media (min-width: 769px) and (max-width: 1024px) {
+  nav { padding: 18px 32px; }
+  .nav-links { gap: 20px; }
+
+  .hero {
+    padding: 0 32px;
+    padding-top: 90px;
+    gap: 20px;
+  }
+  .hero-left { padding-right: 20px; }
+  .hero-visual { width: 320px; height: 400px; }
+  .ft-1 { right: -10px; }
+  .ft-2 { left: -10px; }
+
+  section { padding: 80px 32px; }
+
+  .stats-strip {
+    padding: 20px 32px;
+    gap: 0;
+  }
+  .stat-item { padding: 0 24px; }
+
+  .skills-grid { gap: 2px; }
+  .skill-card { padding: 28px; }
+
+  .projects-grid { gap: 2px; }
+  .project-card { padding: 28px; }
+  .project-card-featured {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .project-mockup { width: 100%; height: 160px; }
+
+  .about-grid { gap: 40px; }
+
+  footer { padding: 24px 32px; }
 }
 
   </style>
 </head>
 <body>
 
-  <!-- ===== CUSTOM CURSOR ===== -->
+  <!-- CUSTOM CURSOR -->
   <div class="cursor" id="cursor"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
-  <!-- ===== NAVIGATION ===== -->
+  <!-- NAVIGATION -->
   <nav>
     <a href="#" class="nav-logo">HM<span>.</span></a>
     <ul class="nav-links">
@@ -852,9 +1087,21 @@ footer span { color: var(--accent); }
       <li><a href="#contact">Contact</a></li>
     </ul>
     <a href="mailto:harishmanni@email.com" class="nav-cta">Hire Me</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
-  <!-- ===== HERO ===== -->
+  <!-- Mobile Menu -->
+  <div class="nav-mobile-menu" id="mobileMenu">
+    <a href="#skills"   onclick="closeMobile()">Skills</a>
+    <a href="#projects" onclick="closeMobile()">Work</a>
+    <a href="#about"    onclick="closeMobile()">About</a>
+    <a href="#contact"  onclick="closeMobile()">Contact</a>
+    <a href="mailto:harishmanni@email.com">Hire Me →</a>
+  </div>
+
+  <!-- HERO -->
   <section class="hero" id="home">
     <div class="hero-bg-grid"></div>
 
@@ -881,7 +1128,8 @@ footer span { color: var(--accent); }
     <div class="hero-right">
       <div class="hero-visual">
         <div class="hero-card">
-         <img src="harish.jpg" alt="Harishphoto" class="avatar-initials" style="object-fit:cover; object-position: center top;" />
+          <!-- Replace src with your actual image path e.g. src="photo.jpg" -->
+          <div class="avatar-initials">HM</div>
           <div class="floating-tag ft-1"><div class="dot"></div> Web Developer</div>
           <div class="floating-tag ft-2"><div class="dot"></div> UI/UX + Graphics</div>
           <div class="floating-tag ft-3"><div class="dot"></div> Video Editor</div>
@@ -896,7 +1144,7 @@ footer span { color: var(--accent); }
     </div>
   </section>
 
-  <!-- ===== STATS STRIP ===== -->
+  <!-- STATS STRIP -->
   <div class="stats-strip">
     <div class="stat-item reveal">
       <div class="stat-num" data-target="4">0</div>
@@ -916,7 +1164,7 @@ footer span { color: var(--accent); }
     </div>
   </div>
 
-  <!-- ===== TOOLS MARQUEE ===== -->
+  <!-- TOOLS MARQUEE -->
   <div class="tools-marquee">
     <div class="marquee-track">
       <div class="marquee-item">HTML <span>◆</span></div>
@@ -929,7 +1177,6 @@ footer span { color: var(--accent); }
       <div class="marquee-item">Figma <span>◆</span></div>
       <div class="marquee-item">Python <span>◆</span></div>
       <div class="marquee-item">React <span>◆</span></div>
-      <!-- Duplicate set for seamless loop -->
       <div class="marquee-item">HTML <span>◆</span></div>
       <div class="marquee-item">CSS <span>◆</span></div>
       <div class="marquee-item">JavaScript <span>◆</span></div>
@@ -943,106 +1190,67 @@ footer span { color: var(--accent); }
     </div>
   </div>
 
-  <!-- ===== SKILLS ===== -->
+  <!-- SKILLS -->
   <section id="skills">
     <div class="section-tag">What I Do</div>
     <h2 class="section-title reveal">
       My <span class="highlight">Expertise</span>
       <span class="ghost">&amp; Skills</span>
     </h2>
-
     <div class="skills-grid">
-
       <div class="skill-card reveal">
         <span class="skill-num">01</span>
         <span class="skill-icon">🌐</span>
         <h3 class="skill-name">Web Development</h3>
-        <p class="skill-desc">
-          Building fast, responsive, and pixel-perfect websites from scratch. I love turning
-          creative concepts into fully functional digital experiences that users enjoy navigating.
-        </p>
+        <p class="skill-desc">Building fast, responsive, and pixel-perfect websites from scratch. I love turning creative concepts into fully functional digital experiences that users enjoy navigating.</p>
         <div class="skill-tags">
-          <span class="tag">HTML5</span>
-          <span class="tag">CSS3</span>
-          <span class="tag">JavaScript</span>
-          <span class="tag">React</span>
-          <span class="tag">Responsive Design</span>
+          <span class="tag">HTML5</span><span class="tag">CSS3</span><span class="tag">JavaScript</span><span class="tag">React</span><span class="tag">Responsive Design</span>
         </div>
       </div>
-
       <div class="skill-card reveal">
         <span class="skill-num">02</span>
         <span class="skill-icon">🎨</span>
         <h3 class="skill-name">Graphics Design</h3>
-        <p class="skill-desc">
-          Crafting striking visual identities, posters, social media assets, and brand materials.
-          From concept to final design, I communicate ideas through compelling visuals.
-        </p>
+        <p class="skill-desc">Crafting striking visual identities, posters, social media assets, and brand materials. From concept to final design, I communicate ideas through compelling visuals.</p>
         <div class="skill-tags">
-          <span class="tag">Photoshop</span>
-          <span class="tag">Illustrator</span>
-          <span class="tag">Figma</span>
-          <span class="tag">Brand Identity</span>
-          <span class="tag">Print Design</span>
+          <span class="tag">Photoshop</span><span class="tag">Illustrator</span><span class="tag">Figma</span><span class="tag">Brand Identity</span><span class="tag">Print Design</span>
         </div>
       </div>
-
       <div class="skill-card reveal">
         <span class="skill-num">03</span>
         <span class="skill-icon">🎬</span>
         <h3 class="skill-name">Video Editing</h3>
-        <p class="skill-desc">
-          Editing videos that captivate audiences — from color grading and motion graphics
-          to full-on storytelling cuts. Turning raw footage into professional productions.
-        </p>
+        <p class="skill-desc">Editing videos that captivate audiences — from color grading and motion graphics to full-on storytelling cuts. Turning raw footage into professional productions.</p>
         <div class="skill-tags">
-          <span class="tag">Premiere Pro</span>
-          <span class="tag">After Effects</span>
-          <span class="tag">Color Grading</span>
-          <span class="tag">Motion Graphics</span>
+          <span class="tag">Premiere Pro</span><span class="tag">After Effects</span><span class="tag">Color Grading</span><span class="tag">Motion Graphics</span>
         </div>
       </div>
-
       <div class="skill-card reveal">
         <span class="skill-num">04</span>
         <span class="skill-icon">💻</span>
         <h3 class="skill-name">Programming &amp; Coding</h3>
-        <p class="skill-desc">
-          Writing clean, efficient code with a deep love for problem-solving. Passionate about
-          algorithms, data structures, and building tools that make life easier.
-        </p>
+        <p class="skill-desc">Writing clean, efficient code with a deep love for problem-solving. Passionate about algorithms, data structures, and building tools that make life easier.</p>
         <div class="skill-tags">
-          <span class="tag">Python</span>
-          <span class="tag">Java</span>
-          <span class="tag">C</span>
-          <span class="tag">Algorithms</span>
-          <span class="tag">Data Structures</span>
+          <span class="tag">Python</span><span class="tag">Java</span><span class="tag">C</span><span class="tag">Algorithms</span><span class="tag">Data Structures</span>
         </div>
       </div>
-
     </div>
   </section>
 
-  <!-- ===== PROJECTS ===== -->
+  <!-- PROJECTS -->
   <section id="projects">
     <div class="section-tag">Selected Work</div>
     <h2 class="section-title reveal">
       Recent <span class="highlight">Projects</span>
       <span class="ghost">I've Built</span>
     </h2>
-
     <div class="projects-grid">
-
       <!-- Featured -->
       <div class="project-card project-card-featured reveal">
         <div>
           <div class="project-num">01 — Featured</div>
           <h3 class="project-title">Personal Brand Website</h3>
-          <p class="project-desc">
-            A fully animated, dark-themed portfolio site designed from scratch — featuring smooth
-            transitions, custom cursor effects, scroll animations, and a responsive layout that
-            works beautifully across all devices.
-          </p>
+          <p class="project-desc">A fully animated, dark-themed portfolio site designed from scratch — featuring smooth transitions, custom cursor effects, scroll animations, and a responsive layout that works beautifully across all devices.</p>
           <div class="project-footer">
             <div class="project-tech">
               <span class="tech-badge">HTML</span>
@@ -1058,11 +1266,7 @@ footer span { color: var(--accent); }
       <div class="project-card reveal">
         <div class="project-num">02</div>
         <h3 class="project-title">Social Media Brand Kit</h3>
-        <p class="project-desc">
-          Complete graphic design package for a local business — logo design, color palette,
-          Instagram templates, business cards, and poster designs. A unified visual identity
-          that boosted brand recognition.
-        </p>
+        <p class="project-desc">Complete graphic design package for a local business — logo design, color palette, Instagram templates, business cards, and poster designs. A unified visual identity that boosted brand recognition.</p>
         <div class="project-footer">
           <div class="project-tech">
             <span class="tech-badge">Photoshop</span>
@@ -1075,11 +1279,7 @@ footer span { color: var(--accent); }
       <div class="project-card reveal">
         <div class="project-num">03</div>
         <h3 class="project-title">College Event Promo Video</h3>
-        <p class="project-desc">
-          Directed and edited a promotional video for a college tech fest — featuring motion
-          graphics, transitions, voiceover syncing, and cinematic color grading that garnered
-          thousands of views.
-        </p>
+        <p class="project-desc">Directed and edited a promotional video for a college tech fest — featuring motion graphics, transitions, voiceover syncing, and cinematic color grading that garnered thousands of views.</p>
         <div class="project-footer">
           <div class="project-tech">
             <span class="tech-badge">Premiere Pro</span>
@@ -1092,10 +1292,7 @@ footer span { color: var(--accent); }
       <div class="project-card reveal">
         <div class="project-num">04</div>
         <h3 class="project-title">Student Management System</h3>
-        <p class="project-desc">
-          A CSIT academic project — full CRUD application for managing student records, grades,
-          and attendance. Clean UI, database integration, and authentication flow built end-to-end.
-        </p>
+        <p class="project-desc">A CSIT academic project — full CRUD application for managing student records, grades, and attendance. Clean UI, database integration, and authentication flow built end-to-end.</p>
         <div class="project-footer">
           <div class="project-tech">
             <span class="tech-badge">Python</span>
@@ -1105,18 +1302,16 @@ footer span { color: var(--accent); }
           <div class="project-arrow">→</div>
         </div>
       </div>
-
     </div>
   </section>
 
-  <!-- ===== ABOUT ===== -->
+  <!-- ABOUT -->
   <section id="about" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
     <div class="section-tag">The Human</div>
     <h2 class="section-title reveal">
       About <span class="highlight">Me</span>
       <span class="ghost">Harish Manni</span>
     </h2>
-
     <div class="about-grid">
       <div>
         <p class="about-text reveal">
@@ -1138,7 +1333,6 @@ footer span { color: var(--accent); }
           <a href="#contact" class="btn-primary">Let's Work Together →</a>
         </div>
       </div>
-
       <div class="about-right reveal">
         <div class="edu-card">
           <div class="edu-icon">🎓</div>
@@ -1176,119 +1370,120 @@ footer span { color: var(--accent); }
     </div>
   </section>
 
-  <!-- ===== CONTACT ===== -->
+  <!-- CONTACT -->
   <section id="contact" class="contact-section">
     <div class="section-tag" style="justify-content: center;">Say Hello</div>
-    <h2 class="section-title reveal" style="margin-bottom: 0; font-size: clamp(40px, 6vw, 80px);">
+    <h2 class="section-title reveal" style="margin-bottom: 0; font-size: clamp(32px, 6vw, 80px);">
       Let's Create<br><span class="ghost">Something Great</span>
     </h2>
     <a href="mailto:harishmanni@email.com" class="contact-email reveal">harishmanni@email.com</a>
-    <div class="reveal" style="color: var(--muted); font-size: 13px; max-width: 480px; margin: 0 auto; line-height: 1.9;">
+    <div class="reveal" style="color: var(--muted); font-size: 13px; max-width: 480px; margin: 0 auto; line-height: 1.9; padding: 0 20px;">
       Have a project in mind? Looking for a creative developer who can handle design, video,
       and code? I'm available for freelance, collaborations, and internship opportunities.
     </div>
     <div class="socials reveal">
-      <a href="https://github.com/harishmanni" class="social-link">GH</a>
+      <a href="https://github.com/harishmanni"          class="social-link">GH</a>
       <a href="https://www.linkedin.com/in/harishmanni" class="social-link">LI</a>
-      <a href="https://x.com/harish_manni" class="social-link">TW</a>
-      <a href="https://www.instagram.com/roninnn10/" class="social-link">IG</a>
-      <a href="https://www.youtube.com/@green_10000" class="social-link">YT</a>
+      <a href="https://x.com/harish_manni"              class="social-link">TW</a>
+      <a href="https://www.instagram.com/roninnn10/"    class="social-link">IG</a>
+      <a href="https://www.youtube.com/@green_10000"    class="social-link">YT</a>
     </div>
   </section>
 
-  <!-- ===== FOOTER ===== -->
+  <!-- FOOTER -->
   <footer>
     <p>© 2025 <span>Harish Manni</span>. All rights reserved.</p>
     <p>Designed &amp; Built with <span>♥</span> — CSIT Student · Nepal</p>
-    <p style="font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted);">
-      [ Available For Work ]
-    </p>
+    <p style="font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted);">[ Available For Work ]</p>
   </footer>
 
-  <!-- JavaScript -->
   <script>
 /* ============================================
-   HARISH MANNI — PORTFOLIO SCRIPTS
-   script.js
+   PORTFOLIO SCRIPTS
    ============================================ */
 
-/* ---------- CUSTOM CURSOR ---------- */
-const cursor    = document.getElementById('cursor');
+/* --- HAMBURGER MENU --- */
+const hamburger   = document.getElementById('hamburger');
+const mobileMenu  = document.getElementById('mobileMenu');
+
+hamburger.addEventListener('click', () => {
+  mobileMenu.classList.toggle('open');
+});
+
+function closeMobile() {
+  mobileMenu.classList.remove('open');
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', (e) => {
+  if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+    closeMobile();
+  }
+});
+
+/* --- CUSTOM CURSOR (desktop only) --- */
+const cursor     = document.getElementById('cursor');
 const cursorRing = document.getElementById('cursorRing');
 
-let mouseX = 0, mouseY = 0;
-let ringX  = 0, ringY  = 0;
+if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
 
-// Move the dot cursor instantly
-document.addEventListener('mousemove', (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-  cursor.style.left = mouseX - 6 + 'px';
-  cursor.style.top  = mouseY - 6 + 'px';
-});
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX - 6 + 'px';
+    cursor.style.top  = mouseY - 6 + 'px';
+  });
 
-// Animate the ring with smooth lag
-function animateRing() {
-  ringX += (mouseX - ringX - 18) * 0.12;
-  ringY += (mouseY - ringY - 18) * 0.12;
-  cursorRing.style.left = ringX + 'px';
-  cursorRing.style.top  = ringY + 'px';
-  requestAnimationFrame(animateRing);
+  function animateRing() {
+    ringX += (mouseX - ringX - 18) * 0.12;
+    ringY += (mouseY - ringY - 18) * 0.12;
+    cursorRing.style.left = ringX + 'px';
+    cursorRing.style.top  = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button, .skill-card, .project-card').forEach((el) => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform    = 'scale(2.5)';
+      cursorRing.style.transform = 'scale(0.5)';
+      cursorRing.style.opacity  = '1';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform    = 'scale(1)';
+      cursorRing.style.transform = 'scale(1)';
+      cursorRing.style.opacity  = '0.5';
+    });
+  });
 }
-animateRing();
 
-// Scale cursor on interactive elements
-const interactiveEls = document.querySelectorAll('a, button, .skill-card, .project-card');
-interactiveEls.forEach((el) => {
-  el.addEventListener('mouseenter', () => {
-    cursor.style.transform    = 'scale(2.5)';
-    cursorRing.style.transform = 'scale(0.5)';
-    cursorRing.style.opacity  = '1';
-  });
-  el.addEventListener('mouseleave', () => {
-    cursor.style.transform    = 'scale(1)';
-    cursorRing.style.transform = 'scale(1)';
-    cursorRing.style.opacity  = '0.5';
-  });
-});
-
-
-/* ---------- SCROLL REVEAL ---------- */
+/* --- SCROLL REVEAL --- */
 const revealEls = document.querySelectorAll('.reveal');
-
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry, i) => {
     if (entry.isIntersecting) {
-      // Stagger each card slightly
-      setTimeout(() => {
-        entry.target.classList.add('visible');
-      }, i * 80);
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
       revealObserver.unobserve(entry.target);
     }
   });
-}, { threshold: 0.1 });
-
+}, { threshold: 0.08 });
 revealEls.forEach((el) => revealObserver.observe(el));
 
-
-/* ---------- ANIMATED COUNTERS ---------- */
+/* --- ANIMATED COUNTERS --- */
 function animateCounter(el, target, suffix = '') {
   let startTime = null;
   const duration = 1800;
-
   function step(timestamp) {
     if (!startTime) startTime = timestamp;
     const progress = Math.min((timestamp - startTime) / duration, 1);
-    const eased    = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+    const eased    = 1 - Math.pow(1 - progress, 3);
     el.textContent = Math.floor(eased * target) + suffix;
     if (progress < 1) requestAnimationFrame(step);
   }
-
   requestAnimationFrame(step);
 }
 
 const statNumbers = document.querySelectorAll('.stat-num[data-target]');
-
 const counterObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
@@ -1299,11 +1494,9 @@ const counterObserver = new IntersectionObserver((entries) => {
     }
   });
 }, { threshold: 0.5 });
-
 statNumbers.forEach((el) => counterObserver.observe(el));
 
-
-/* ---------- SMOOTH SCROLL ---------- */
+/* --- SMOOTH SCROLL --- */
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener('click', (e) => {
     const targetEl = document.querySelector(anchor.getAttribute('href'));
@@ -1313,8 +1506,6 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     }
   });
 });
-
-</script>
-
+  </script>
 </body>
 </html>
